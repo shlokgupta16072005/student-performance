@@ -1,11 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-  "start": "node app.js",
-  "build": "echo 'Build Success'"
-},
+    "start": "node app.js",
+    "build": "echo 'Build Success'"
+  },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
