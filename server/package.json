@@ -1,5 +1,5 @@
 {
-  "name": "student-performance-api",
+  "name": "student-performance-api-v2",
   "version": "1.0.0",
   "description": "Backend API for Student Performance Prediction System",
   "main": "app.js",
