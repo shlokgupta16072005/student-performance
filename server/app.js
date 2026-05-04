@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const API = "https://student-performance-yo0o.onrender.com";
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
