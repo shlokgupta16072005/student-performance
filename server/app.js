@@ -15,8 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection with error handling
-// We don't call .listen() until the DB is connected to prevent startup errors
+// MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -26,11 +25,12 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // --- Routes ---
 
-// Root route (Helps Vercel verify the deployment is live)
+// Root route
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Student Performance API is running 🚀" });
 });
 
+// Registration route
 app.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -42,6 +42,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
+// Login route
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -51,7 +52,6 @@ app.post("/login", async (req, res) => {
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) return res.status(401).send("Invalid credentials");
 
-    // Replace "secret" with process.env.JWT_SECRET in production!
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "secret", { expiresIn: '1h' });
     res.json({ token });
   } catch (err) {
@@ -59,6 +59,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Prediction route
 app.post("/predict", async (req, res) => {
   try {
     const { attendance, study } = req.body;
@@ -71,6 +72,7 @@ app.post("/predict", async (req, res) => {
   }
 });
 
+// History route
 app.get("/history", async (req, res) => {
   try {
     const data = await Prediction.find().sort({ _id: -1 });
@@ -80,11 +82,12 @@ app.get("/history", async (req, res) => {
   }
 });
 
-// IMPORTANT: Export for Vercel's serverless environment
+// Export for Vercel (optional but good for compatibility)
 module.exports = app;
 
-// Listen for local development
+// --- Render/Local Activation ---
+// Render uses the PORT environment variable. 0.0.0.0 is mandatory for Render.
 const PORT = process.env.PORT || 10000;
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-}
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server is running on port ${PORT}`);
+});
